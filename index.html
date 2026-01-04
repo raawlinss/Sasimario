@@ -1,0 +1,43 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Super Mario HTML5 Test</title>
+<link href="Content/style.css" rel="stylesheet" />
+<style>
+  .splash { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.65); backdrop-filter: blur(2px); z-index: 2000; }
+  .splash-card { background: #111; color: #fff; padding: 24px 28px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.15); min-width: 280px; }
+  .splash-card h2 { margin: 0 0 6px 0; font-weight: 700; letter-spacing: .5px; }
+  .splash-card h3 { margin: 0 0 16px 0; font-weight: 500; opacity: .9; }
+  .start-btn { background: #10b981; color: #06120f; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+  .start-btn:hover { filter: brightness(1.05); }
+  .note { opacity: .8; font-size: 12px; margin-top: 10px; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div id="game">
+<div id="world">
+</div>
+<div id="coinNumber" class="gauge">0</div>
+<div id="coin" class="gaugeSprite"></div>
+<div id="liveNumber" class="gauge">0</div>
+<div id="live" class="gaugeSprite"></div>
+</div>
+<div id="splash" class="splash">
+  <div class="splash-card">
+    <h2>Rawlins Sunar</h2>
+    <h3>Oyunu Başlar</h3>
+    <button id="start-btn" class="start-btn">Başlat</button>
+    <p class="note">Başlat'a basınca müzik açılır ve oyun başlar.</p>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="Scripts/testlevels.js"></script>
+<script src="Scripts/oop.js"></script>
+<script src="Scripts/keys.js"></script>
+<script src="Scripts/constants.js"></script>
+<script src="Scripts/sound.js"></script>
+<script src="Scripts/main.js"></script>
+</body>
+</html>
