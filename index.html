@@ -1,0 +1,106 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Super Mario HTML5 Test</title>
+<link href="Content/style.css" rel="stylesheet" />
+<style>
+  .splash { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,0.65); backdrop-filter: blur(2px); z-index: 2000; }
+  .splash-card { background: #111; color: #fff; padding: 24px 28px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.15); min-width: 280px; }
+  .splash-card h2 { margin: 0 0 6px 0; font-weight: 700; letter-spacing: .5px; }
+  .splash-card h3 { margin: 0 0 16px 0; font-weight: 500; opacity: .9; }
+  .start-btn { background: #10b981; color: #06120f; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+  .start-btn:hover { filter: brightness(1.05); }
+  .note { opacity: .8; font-size: 12px; margin-top: 10px; }
+  .hidden { display: none !important; }
+  .rawlins-title { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 2100; padding: 6px 14px; border-radius: 12px; background: rgba(0,0,0,0.35); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.14); color: #fff; font-weight: 800; letter-spacing: 0.42em; font-size: 22px; line-height: 1; text-transform: uppercase; text-shadow: 0 8px 22px rgba(0,0,0,0.45); user-select: none; }
+  .kick-chat { position: fixed; top: 56px; right: 12px; width: 360px; height: 360px; z-index: 2100; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.14); background: rgba(0,0,0,0.35); backdrop-filter: blur(6px); }
+  .kick-chat iframe { width: 360px; height: 720px; border: 0; display: block; transform: translateY(-110px); }
+  .kick-chat .kick-toggle { position: absolute; top: 8px; left: 8px; z-index: 2; background: rgba(0,0,0,0.75); color: #fff; border: 1px solid rgba(255,255,255,0.18); padding: 6px 8px; border-radius: 8px; cursor: pointer; font-size: 12px; line-height: 1; }
+  .kick-chat.kick-messages { width: 360px; height: 260px; }
+  .kick-chat.kick-messages iframe { height: 720px; transform: translateY(-150px); }
+</style>
+</head>
+<body>
+<div class="rawlins-title">R A W L I N S</div>
+<div class="kick-chat" id="kick-chat">
+  <button type="button" class="kick-toggle" id="kick-toggle">Mesajlar</button>
+  <iframe src="https://kick.com/popout/oguzsasi/chat" referrerpolicy="no-referrer" allow="clipboard-read; clipboard-write"></iframe>
+</div>
+<div id="game">
+<div id="world">
+</div>
+<div id="coinNumber" class="gauge">0</div>
+<div id="coin" class="gaugeSprite"></div>
+<div id="liveNumber" class="gauge">0</div>
+<div id="live" class="gaugeSprite"></div>
+</div>
+<div id="splash" class="splash">
+  <div class="splash-card">
+    <h2>Rawlins Sunar</h2>
+    <h3>Oyunu Başlar</h3>
+    <button id="start-btn" class="start-btn">Başlat</button>
+    <p class="note">Başlata bassana şaban</p>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="Scripts/testlevels.js"></script>
+<script src="Scripts/oop.js"></script>
+<script src="Scripts/keys.js"></script>
+<script src="Scripts/constants.js"></script>
+<script>
+  (function(){
+    if (!window.jQuery) return;
+    var queue = [];
+    var orig = jQuery.fn.ready;
+    jQuery.fn.ready = function(fn){ queue.push(fn); return this; };
+    window.__runDeferredReady = function(){
+      var fn; while((fn = queue.shift())) { try { fn.call(document); } catch(e){} }
+      jQuery.fn.ready = orig;
+    };
+  })();
+  </script>
+<script src="Scripts/sound.js"></script>
+<script src="Scripts/main.js"></script>
+<script>
+  (function(){
+    function wireLevelSound(){
+      if (!window.Level) return false;
+      Level.prototype.setSounds = function(){};
+      Level.prototype.playSound = function(label){ if (window.__soundMgr) window.__soundMgr.play(label); };
+      Level.prototype.playMusic = function(label){ if (window.__soundMgr) window.__soundMgr.sideMusic(label); };
+      return true;
+    }
+    wireLevelSound();
+
+    var kickWrap = document.getElementById('kick-chat');
+    var kickToggle = document.getElementById('kick-toggle');
+    if (kickWrap && kickToggle) {
+      kickToggle.addEventListener('click', function(){
+        var enabled = kickWrap.classList.toggle('kick-messages');
+        kickToggle.textContent = enabled ? 'Tam' : 'Mesajlar';
+      });
+    }
+
+    var btn = document.getElementById('start-btn');
+    var splash = document.getElementById('splash');
+    if (btn) {
+      btn.addEventListener('click', function(){
+        if (splash) splash.classList.add('hidden');
+        if (window.SoundManager) {
+          window.__soundMgr = new SoundManager({
+            sfx: { jump: 'Content/sounds/jump.wav', die: 'Content/sounds/die.wav' },
+            bgm: 'https://www.dropbox.com/scl/fi/2evfraew8zzmz5u86rb0f/O-uz-Sasi-De-La-Pandikos-REMASTERED.mp3?rlkey=1jhdfp3ehkx1gyoeh77jlsj2s&st=gqrfkghk&dl=1',
+            volume: 0.5,
+            deathUrl: 'https://www.dropbox.com/scl/fi/nw2e167pl33r5vd3xtiq9/O-uz-Sasi-Ahlama-Earrape-mp3cut.net.mp3?rlkey=sq3n6ibu4qj8h0dm35pahrdiw&st=5sh0twb9&dl=1'
+          });
+          // start background music now
+          window.__soundMgr.sideMusic('bgm');
+        }
+        if (window.__runDeferredReady) window.__runDeferredReady();
+      });
+    }
+  })();
+  </script>
+</body>
+</html>
